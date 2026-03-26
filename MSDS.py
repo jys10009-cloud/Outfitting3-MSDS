@@ -31,8 +31,8 @@ row2 = st.columns(4)
 
 category_choice = None
 categories = [
-    ("🎨", "1. 도장재", "Paint"), ("🔥", "2. 용접재", "용접재"), 
-    ("🛢️", "3. 오일,락카", "오일,락카"), ("🪨", "4. 숫돌 및 사포", "숫돌 및 사포"),
+    ("🎨", "1. 도장재", "도장재"), ("🔥", "2. 용접재", "용접재"), 
+    ("🛢️", "3. 오일, 락카", "오일, 락카"), ("🪨", "4. 숫돌 및 사포", "숫돌 및 사포"),
     ("🧱", "5. 충진재,경화재", "충진재,경화재"), ("🔩", "6. 부자재", "부자재"), 
     ("🔫", "7. 실리콘", "실리콘"), ("🔧", "8. 기타용품", "기타용품")
 ]
@@ -42,7 +42,7 @@ for i, (icon, label, val) in enumerate(categories):
     if target_row[i % 4].button(f"{icon}\n\n{label}", use_container_width=True):
         category_choice = val
 
-if row2[0].button("🔄\n\n전체 초기화", use_container_width=True):
+if row2[3].button("🔄\n\n전체 초기화", use_container_width=True):
     st.rerun()
 
 # --- 검색창 ---
