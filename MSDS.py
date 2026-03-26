@@ -21,7 +21,7 @@ def load_data():
 df = load_data()
 
 # --- 메인 UI ---
-st.title("🗂️ 현장 MSDS 통합 검색")
+st.title("🔍 의장3부 MSDS 관리 시스템")
 st.info("💡 **물질명(이름)**을 터치하면 MSDS 파일이 바로 열립니다.")
 
 # --- 7대 대분류 버튼 ---
@@ -42,7 +42,7 @@ for i, (icon, label, val) in enumerate(categories):
     if target_row[i % 4].button(f"{icon}\n\n{label}", use_container_width=True):
         category_choice = val
 
-if row2[3].button("🔄\n\n전체 초기화", use_container_width=True):
+if row2[0].button("🔄\n\n전체 초기화", use_container_width=True):
     st.rerun()
 
 # --- 검색창 ---
