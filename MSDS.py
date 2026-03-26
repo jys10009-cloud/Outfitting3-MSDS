@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 
 # 페이지 기본 설정
-st.set_page_config(page_title="의장1부 현장 MSDS 관리 시스템", layout="wide")
+st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="wide")
 
 # 1. 구글 시트 설정 (깨진 URL을 정상적인 CSV 다운로드 링크로 수정했습니다)
-SHEET_ID = "1hRu0cQZGIQp4dxEK0HXdIuiJ1abI55SreVR1JZhPmig"
+SHEET_ID = "1bGoZmkSBZnckeuhELCQgQP9qcpLMjFbZR5Y1ortYE1M"
 SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
 # 2. 데이터 불러오기
