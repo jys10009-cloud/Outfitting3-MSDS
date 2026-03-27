@@ -1,14 +1,14 @@
 import streamlit as st
 import pandas as pd
 
-# 페이지 기본 설정
-st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="wide")
+# 1. 페이지 기본 설정 (모바일 최적화를 위해 'centered'로 변경)
+st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="centered")
 
-# 1. 구글 시트 설정 (깨진 URL을 정상적인 CSV 다운로드 링크로 수정했습니다)
+# 2. 구글 시트 설정
 SHEET_ID = "1bGoZmkSBZnckeuhELCQgQP9qcpLMjFbZR5Y1ortYE1M"
 SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
-# 2. 데이터 불러오기
+# 3. 데이터 불러오기
 @st.cache_data(ttl=60)
 def load_data():
     try:
@@ -24,10 +24,8 @@ df = load_data()
 st.title("🔍 의장3부 MSDS 관리 시스템")
 st.info("💡 **물질명(이름)**을 터치하면 MSDS 파일이 바로 열립니다.")
 
-# --- 7대 대분류 버튼 ---
+# --- 카테고리 버튼 (모바일 최적화: 2칸씩 4줄 배열) ---
 st.subheader("📌 카테고리별 보기")
-row1 = st.columns(4)
-row2 = st.columns(4)
 
 category_choice = None
 categories = [
@@ -37,12 +35,19 @@ categories = [
     ("🔫", "7. 실리콘", "실리콘"), ("🔧", "8. 기타용품", "기타용품")
 ]
 
-for i, (icon, label, val) in enumerate(categories):
-    target_row = row1 if i < 4 else row2
-    if target_row[i % 4].button(f"{icon}\n\n{label}", use_container_width=True):
-        category_choice = val
+# 모바일 화면을 고려하여 한 줄에 2개씩 널찍하게 배치합니다.
+for i in range(0, len(categories), 2):
+    cols = st.columns(2)
+    # 왼쪽 버튼
+    if cols[0].button(f"{categories[i][0]} {categories[i][1]}", use_container_width=True):
+        category_choice = categories[i][2]
+    # 오른쪽 버튼
+    if cols[1].button(f"{categories[i+1][0]} {categories[i+1][1]}", use_container_width=True):
+        category_choice = categories[i+1][2]
 
-if row2[3].button("🔄\n\n전체 초기화", use_container_width=True):
+# 전체 초기화 버튼은 터치하기 쉽게 단독으로 넓게 배치
+st.write("") # 약간의 여백
+if st.button("🔄 전체 초기화", use_container_width=True):
     st.rerun()
 
 # --- 검색창 ---
@@ -51,10 +56,8 @@ search_query = st.text_input("🔍 직접 검색 (물질명 또는 제조사)", 
 
 # --- 데이터 필터링 ---
 if category_choice:
-    # 카테고리 버튼 클릭 시 해당 분류만 필터링
     filtered_df = df[df['분류'].str.contains(category_choice, na=False)]
 elif search_query:
-    # 검색창 입력 시: MSDS명 OR 제조사(Maker) OR 비고 컬럼에서 검색
     filtered_df = df[
         df['MSDS명'].str.contains(search_query, case=False) | 
         df['Maker'].str.contains(search_query, case=False) |
@@ -63,29 +66,32 @@ elif search_query:
 else:
     filtered_df = df
 
-# --- [핵심] 누르면 바로 열리는 리스트형 출력 ---
+# --- [핵심] 결과 카드 (모바일 최적화 디자인) ---
 st.subheader(f"📄 검색 결과 ({len(filtered_df)}건)")
 
 if len(filtered_df) == 0:
     st.warning("검색 결과가 없습니다.")
 else:
     for _, row in filtered_df.iterrows():
-        # HTML을 사용하여 물질명에 링크를 입히고 디자인 적용
         msds_name = row['MSDS명']
         link_url = row['링크']
         maker_info = row['Maker']
         category_info = row['분류']
         
-        # 카드 스타일로 표시 (이름 클릭 시 링크 연결)
+        # 폰트 크기와 여백(padding)을 모바일에 맞게 조절하고, 분류에 배지(Badge) 스타일 적용
         st.markdown(f"""
-            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
-                <a href="{link_url}" target="_blank" style="text-decoration: none; color: #007bff; font-size: 20px; font-weight: bold;">
+            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 12px; background-color: #fcfcfc;">
+                <a href="{link_url}" target="_blank" style="text-decoration: none; color: #0056b3; font-size: 17px; font-weight: 700;">
                     🔗 {msds_name}
                 </a>
-                <div style="margin-top: 5px; color: #555; font-size: 14px;">
-                    <b>제조사:</b> {maker_info} | <b>분류:</b> {category_info}
+                <div style="margin-top: 8px; color: #444; font-size: 13px;">
+                    <span style="background-color: #e9ecef; color: #495057; padding: 3px 6px; border-radius: 4px; font-weight: 600; margin-right: 6px;">
+                        {category_info}
+                    </span> 
+                    <b>제조사:</b> {maker_info}
                 </div>
-                <div style="color: #888; font-size: 12px; margin-top: 5px;">{row['비고']}</div>
+                <div style="color: #666; font-size: 12px; margin-top: 8px; line-height: 1.4;">{row['비고']}</div>
             </div>
         """, unsafe_allow_html=True)
-        st.caption("위의 파란색 이름을 클릭하면 구글 드라이브로 연결됩니다.")
+        
+    st.caption("👆 위의 파란색 이름을 터치하면 구글 드라이브로 연결됩니다.")
