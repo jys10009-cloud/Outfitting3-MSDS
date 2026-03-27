@@ -4,17 +4,14 @@ import pandas as pd
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="centered")
 
-# --- [핵심 수정] 모바일 화면 2열(2줄) 강력 고정 CSS ---
-# 가로폭을 48%로 줄이고, 줄바꿈(wrap)을 원천 차단했습니다.
+# --- 모바일 화면 2열 강력 고정 CSS ---
 st.markdown("""
     <style>
     @media (max-width: 768px) {
-        /* 행(Row) 자체가 밑으로 떨어지는 것을 방지 */
         div[data-testid="stHorizontalBlock"] {
             flex-wrap: nowrap !important;
-            gap: 8px !important; /* 버튼 사이 간격 */
+            gap: 8px !important; 
         }
-        /* 각 버튼(Column)의 가로폭을 안전하게 축소 */
         div[data-testid="column"] {
             width: 48% !important;
             flex: 1 1 48% !important;
@@ -36,7 +33,8 @@ def load_data():
         df = pd.read_csv(SHEET_URL)
         df = df.fillna('').astype(str)
         return df
-    except:
+    except Exception:
+        # 오류 발생 시 빈 데이터프레임 반환 (표준 문법 적용)
         return pd.DataFrame(columns=["분류", "MSDS명", "Maker", "링크", "비고"])
 
 df = load_data()
@@ -56,20 +54,20 @@ categories = [
     ("🔫", "7. 실리콘", "실리콘"), ("🔧", "8. 기타용품", "기타용품")
 ]
 
-# 2개씩 짝지어서 2열로 배치
 for i in range(0, len(categories), 2):
     cols = st.columns(2)
-    # 왼쪽 버튼
     if cols[0].button(f"{categories[i][0]} {categories[i][1]}", use_container_width=True):
         category_choice = categories[i][2]
-    # 오른쪽 버튼
     if cols[1].button(f"{categories[i+1][0]} {categories[i+1][1]}", use_container_width=True):
         category_choice = categories[i+1][2]
 
-# 전체 초기화 버튼
-st.write("") # 약간의 여백
+# --- 전체 초기화 버튼 (버전 호환성 강화) ---
+st.write("") 
 if st.button("🔄 전체 초기화", use_container_width=True):
-    st.rerun()
+    if hasattr(st, "rerun"):
+        st.rerun()
+    else:
+        st.experimental_rerun()
 
 # --- 검색창 ---
 st.divider()
@@ -105,13 +103,4 @@ else:
                     🔗 {msds_name}
                 </a>
                 <div style="margin-top: 8px; color: #444; font-size: 13px;">
-                    <span style="background-color: #e9ecef; color: #495057; padding: 3px 6px; border-radius: 4px; font-weight: 600; margin-right: 6px;">
-                        {category_info}
-                    </span> 
-                    <b>제조사:</b> {maker_info}
-                </div>
-                <div style="color: #666; font-size: 12px; margin-top: 8px; line-height: 1.4;">{row['비고']}</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-    st.
+                    <span style="background-color:
