@@ -4,19 +4,21 @@ import pandas as pd
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="centered")
 
-# --- 모바일 화면 2열 강력 고정 CSS ---
+# --- [핵심 수정] 좌우 여백 완벽 정렬 CSS (Grid 방식) ---
 st.markdown("""
     <style>
     @media (max-width: 768px) {
+        /* 강제 줄바꿈 방지 대신, 컨테이너 자체를 2칸의 표(Grid) 형식으로 고정 */
         div[data-testid="stHorizontalBlock"] {
-            flex-wrap: nowrap !important;
-            gap: 8px !important; 
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important; /* 정확히 1:1 비율로 분할 */
+            gap: 12px !important; /* 버튼 사이의 간격 */
         }
+        /* 각 버튼이 할당된 칸(Grid)을 넘어가지 않도록 100%로 묶어둠 */
         div[data-testid="column"] {
-            width: 48% !important;
-            flex: 1 1 48% !important;
-            min-width: 48% !important;
-            padding: 0 !important;
+            width: 100% !important;
+            min-width: 100% !important;
+            padding: 0 !important; /* 불필요한 내부 여백을 없애 아래 검색결과와 칼각 정렬 */
         }
     }
     </style>
@@ -42,7 +44,7 @@ df = load_data()
 st.title("🔍 의장3부 MSDS 관리 시스템")
 st.info("💡 **물질명(이름)**을 터치하면 MSDS 파일이 바로 열립니다.")
 
-# --- 카테고리 버튼 (2열 고정 배치) ---
+# --- 카테고리 버튼 (2열 완벽 정렬 배치) ---
 st.subheader("📌 카테고리별 보기")
 
 category_choice = None
@@ -96,7 +98,6 @@ else:
         maker_info = row['Maker']
         category_info = row['분류']
         
-        # 여기서 따옴표 3개가 정확히 열리고 닫히도록 수정되었습니다.
         st.markdown(f"""
             <div style="border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 12px; background-color: #fcfcfc;">
                 <a href="{link_url}" target="_blank" style="text-decoration: none; color: #0056b3; font-size: 17px; font-weight: 700;">
