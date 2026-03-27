@@ -103,4 +103,13 @@ else:
                     🔗 {msds_name}
                 </a>
                 <div style="margin-top: 8px; color: #444; font-size: 13px;">
-                    <span style="background
+                    <span style="background-color: #e9ecef; color: #495057; padding: 3px 6px; border-radius: 4px; font-weight: 600; margin-right: 6px;">
+                        {category_info}
+                    </span> 
+                    <b>제조사:</b> {maker_info}
+                </div>
+                <div style="color: #666; font-size: 12px; margin-top: 8px; line-height: 1.4;">{row['비고']}</div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    st.caption("👆 위의 파란색 이름을 터치하면 구글 드라이브로 연결됩니다.")
