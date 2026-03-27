@@ -4,16 +4,22 @@ import pandas as pd
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="centered")
 
-# --- [핵심 추가] 모바일 화면 2열(2줄) 강제 유지 CSS ---
-# 이 코드가 Streamlit이 모바일에서 1줄로 뭉치는 것을 막아줍니다.
+# --- [핵심 수정] 모바일 화면 2열(2줄) 강력 고정 CSS ---
+# 가로폭을 48%로 줄이고, 줄바꿈(wrap)을 원천 차단했습니다.
 st.markdown("""
     <style>
-    @media (max-width: 640px) {
-        [data-testid="column"] {
-            width: calc(50% - 1rem) !important;
-            flex: 1 1 calc(50% - 1rem) !important;
-            min-width: calc(50% - 1rem) !important;
-            padding: 0 5px !important;
+    @media (max-width: 768px) {
+        /* 행(Row) 자체가 밑으로 떨어지는 것을 방지 */
+        div[data-testid="stHorizontalBlock"] {
+            flex-wrap: nowrap !important;
+            gap: 8px !important; /* 버튼 사이 간격 */
+        }
+        /* 각 버튼(Column)의 가로폭을 안전하게 축소 */
+        div[data-testid="column"] {
+            width: 48% !important;
+            flex: 1 1 48% !important;
+            min-width: 48% !important;
+            padding: 0 !important;
         }
     }
     </style>
@@ -39,7 +45,7 @@ df = load_data()
 st.title("🔍 의장3부 MSDS 관리 시스템")
 st.info("💡 **물질명(이름)**을 터치하면 MSDS 파일이 바로 열립니다.")
 
-# --- 카테고리 버튼 (2열 배치) ---
+# --- 카테고리 버튼 (2열 고정 배치) ---
 st.subheader("📌 카테고리별 보기")
 
 category_choice = None
@@ -108,4 +114,4 @@ else:
             </div>
         """, unsafe_allow_html=True)
         
-    st.caption("👆 위의 파란색 이름을 터치하면 구글 드라이브로 연결됩니다.")
+    st.
