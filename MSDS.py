@@ -4,21 +4,23 @@ import pandas as pd
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="의장3부 MSDS 관리 시스템", layout="centered")
 
-# --- [핵심 수정] 좌우 여백 완벽 정렬 CSS (Grid 방식) ---
+# --- [핵심 수정] 카테고리 버튼 폭을 팽팽하게 늘려 '전체 초기화'와 칼각 맞춤 ---
 st.markdown("""
     <style>
     @media (max-width: 768px) {
-        /* 강제 줄바꿈 방지 대신, 컨테이너 자체를 2칸의 표(Grid) 형식으로 고정 */
+        /* 가로 배열 컨테이너가 화면 좌우 끝까지 100% 꽉 채우도록 설정 */
         div[data-testid="stHorizontalBlock"] {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important; /* 정확히 1:1 비율로 분할 */
-            gap: 12px !important; /* 버튼 사이의 간격 */
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            width: 100% !important; 
+            gap: 10px !important; /* 좌우 버튼 사이의 간격 */
         }
-        /* 각 버튼이 할당된 칸(Grid)을 넘어가지 않도록 100%로 묶어둠 */
+        /* 내부의 카테고리 칸이 남는 빈틈 없이 1:1 비율로 쫙 늘어나도록(flex: 1 1 0%) 설정 */
         div[data-testid="column"] {
-            width: 100% !important;
-            min-width: 100% !important;
-            padding: 0 !important; /* 불필요한 내부 여백을 없애 아래 검색결과와 칼각 정렬 */
+            flex: 1 1 0% !important; 
+            min-width: 0 !important;
+            padding: 0 !important;
         }
     }
     </style>
@@ -44,7 +46,7 @@ df = load_data()
 st.title("🔍 의장3부 MSDS 관리 시스템")
 st.info("💡 **물질명(이름)**을 터치하면 MSDS 파일이 바로 열립니다.")
 
-# --- 카테고리 버튼 (2열 완벽 정렬 배치) ---
+# --- 카테고리 버튼 (2열 고정 및 좌우 여백 완벽 정렬) ---
 st.subheader("📌 카테고리별 보기")
 
 category_choice = None
