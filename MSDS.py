@@ -34,7 +34,6 @@ def load_data():
         df = df.fillna('').astype(str)
         return df
     except Exception:
-        # 오류 발생 시 빈 데이터프레임 반환 (표준 문법 적용)
         return pd.DataFrame(columns=["분류", "MSDS명", "Maker", "링크", "비고"])
 
 df = load_data()
@@ -61,7 +60,7 @@ for i in range(0, len(categories), 2):
     if cols[1].button(f"{categories[i+1][0]} {categories[i+1][1]}", use_container_width=True):
         category_choice = categories[i+1][2]
 
-# --- 전체 초기화 버튼 (버전 호환성 강화) ---
+# --- 전체 초기화 버튼 ---
 st.write("") 
 if st.button("🔄 전체 초기화", use_container_width=True):
     if hasattr(st, "rerun"):
@@ -97,10 +96,11 @@ else:
         maker_info = row['Maker']
         category_info = row['분류']
         
+        # 여기서 따옴표 3개가 정확히 열리고 닫히도록 수정되었습니다.
         st.markdown(f"""
             <div style="border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 12px; background-color: #fcfcfc;">
                 <a href="{link_url}" target="_blank" style="text-decoration: none; color: #0056b3; font-size: 17px; font-weight: 700;">
                     🔗 {msds_name}
                 </a>
                 <div style="margin-top: 8px; color: #444; font-size: 13px;">
-                    <span style="background-color:
+                    <span style="background
